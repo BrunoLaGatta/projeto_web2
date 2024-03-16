@@ -1,0 +1,12 @@
+.logo{
+    width: 60px;
+    height: 60px;
+}
+
+.direita{
+    display: flex;
+    flex-grow: 1;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+}
