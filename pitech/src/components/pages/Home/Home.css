@@ -1,0 +1,30 @@
+.nossos_produtos{
+    display: flex;
+    flex-wrap: wrap; /* Para que os cards quebrem para uma nova linha quando não houver espaço */
+    gap: 20px; /* Espaço entre os cards */
+    justify-content: center;
+    margin-top: 5%;
+}
+
+.cards_item{
+    display: flex;
+    flex-wrap:wrap;
+    justify-content: center;
+    align-content: flex-start;
+}
+
+.cards_categoria{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    gap: 20px;
+    padding-top: 3%;
+}
+
+
+.titulo_categoria{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}

@@ -89,9 +89,10 @@ const Footer = () => {
             edge="middle"
             color="inherit"
             aria-label="open drawer"
-            sx={{ flexGrow:1}}
+            sx={{ flexGrow:1, display: 'flex', justifyContent: 'center' }}
           >
-            CEFET-MG
+            Desenvolvido pelos alunos do CEFET-Leopoldina | Projeto sem fins
+      comerciais
           </Typography>
         </Toolbar>
       </AppBar>

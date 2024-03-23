@@ -13,6 +13,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import logo from '../../assets/logoDog.png'
 import './header.css'
+import { CardActionArea } from '@mui/material';
 
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
@@ -106,8 +107,11 @@ export default function MenuAppBar() {
             aria-label="open drawer"
             sx={{ flexGrow:1}}
           >
-            <img className='logo' src={logo} alt="dog" />
+            <CardActionArea>
+              <img className='logo' src={logo} alt="dog" />
+            </CardActionArea>
           </Typography>
+          
 
           <Search sx={{ flexGrow:3, width: '60%'}}>
             <SearchIconWrapper>

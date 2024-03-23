@@ -5,15 +5,19 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
+import CardMedia from '@mui/material/CardMedia';
+import { CardActionArea } from '@mui/material';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     color: 'white',
-    width: '20%',
+    width: '15%',
+    margin: '10px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '10px'
+    padding: '10px',
+    borderRadius: '20px',
   }));
 
   const StyledButton = styled(Button)(({ theme }) => ({
@@ -26,23 +30,31 @@ const StyledCard = styled(Card)(({ theme }) => ({
       },
   }));
 
-const CardItem = () => {
+const CardItem = (props) => {
     
-    const [titulo, setTitulo] = useState('');
-    const [image, setImage] = useState('');
-    const [preco, setPreco] = useState(0);
-
-    // constructor(props){
-        
-    // }
+    const titulo = props.titulo;
+    console.log("titulo", titulo);
+    const image = props.image;
+    const preco = props.preco;
 
     return (
         <StyledCard>
-            <CardContent>
-            <img alt="imagem.png" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXkDMGgjWuZz5wl78RMH6csdz6ErEcU0Ft8pYzjAueKA&s"/>
-                <h2 className="titulo">Arara gamer RGB (Mais R do que GB)</h2>
+            <CardContent sx={{height: '30%'}}>
+             <CardActionArea>
+            <CardMedia
+                component="img"
+                height="140"
+                image= {image}
+                style={{ height: "100%", objectFit: "cover" }}
+            />
+            <div className="titulo_container">
+            <h4 className='titulo'>
+                {titulo}
+            </h4>
+            </div>
+            </CardActionArea>
             </CardContent>
-            <p className='valor'>R$2000,00</p>
+            <p className='valor'>R$ {preco}</p>
             <CardActions sx={{height: '20px'}}>
                 <StyledButton variant="outlined">Ver mais</StyledButton>
             </CardActions>

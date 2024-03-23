@@ -1,4 +1,6 @@
 .container{
     font-size: large;
     font-weight: bolder;
+    text-align: center;
+    padding: 4%;
 }

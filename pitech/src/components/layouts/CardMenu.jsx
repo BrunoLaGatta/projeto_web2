@@ -1,10 +1,8 @@
 import { styled, alpha } from '@mui/material/styles';
 import './CardMenu.css';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
-import { useState } from 'react';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     display: 'flex',
@@ -27,8 +25,12 @@ const CardMenu = (props) =>{
             <CardMedia
                 component="img"
                 height="140"
-                image="https://cdn.pixabay.com/photo/2020/07/02/01/22/cat-5361404_1280.jpg"
-                title="white cat"/>
+                image={image}
+                title={name}
+                style={{ height: "100%", objectFit: "cover" }}
+                />
+            </CardActionArea>
+            <CardActionArea>
             <div className='container'>
                 <p>{name}</p>
             </div>
