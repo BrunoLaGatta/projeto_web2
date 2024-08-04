@@ -7,6 +7,7 @@ import Footer from "./components/layouts/footer";
 import Header from "./components/layouts/header";
 import Home from "./components/pages/Home/Home";
 import Login from "./components/pages/Login/Login";
+import Produto from "./components/pages/Produto/Produto";
 import Registrar from "./components/pages/Registrar/Registrar";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -20,6 +21,7 @@ function App() {
           <Route exact path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/registrar" element={<Registrar />} />
+          <Route path="/produto" element={<Produto />} />
         </Routes>
         <Footer />
       </Router>
