@@ -24,8 +24,8 @@ const StyledButton = styled(Button)`
   border-radius: 1rem;
   margin: 7px 0;
   &:hover {
-    color: #ff8e00;
-    background-color: black;
+    color: white;
+    background-color: #ff8e00;
     border-radius: 1rem;
   }
 `;
