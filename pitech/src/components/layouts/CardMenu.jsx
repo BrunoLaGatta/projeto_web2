@@ -31,7 +31,7 @@ const CardMenu = (props) =>{
                 />
             </CardActionArea>
             <CardActionArea>
-            <div className='container'>
+            <div className='compartimento'>
                 <p>{name}</p>
             </div>
             </CardActionArea>

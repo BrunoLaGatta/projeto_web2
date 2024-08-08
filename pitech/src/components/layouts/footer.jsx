@@ -77,9 +77,8 @@ const Footer = () => {
     }));
   
     return (
-        <Box sx={{ flexGrow: 1, position: 'botton' }}>
-      <AppBar position="static" sx={{backgroundColor: '#ff8e00'}}>
-        <Toolbar>
+        <Toolbar style={{position: 'fixed', bottom: 0, color: "white", width: '100%'}}
+        sx={{backgroundColor: "#ff8e00"}}>
           <Typography
             variant="h6"
             noWrap
@@ -95,8 +94,6 @@ const Footer = () => {
       comerciais
           </Typography>
         </Toolbar>
-      </AppBar>
-    </Box>
     );
 };
 

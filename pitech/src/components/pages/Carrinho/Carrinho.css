@@ -1,0 +1,93 @@
+.grid-carrinho {
+    display: grid;
+    grid-template-columns: 70% 17%;
+    gap: 10%;
+    margin: 2%;
+    margin-left: 7%;
+    font-family: 'Roboto';
+}
+
+.endereco {
+    box-shadow: 1px 1px 10px rgb(235, 235, 235);
+    padding: 10px;
+    height: 130px;
+}
+
+.itens {
+    box-shadow: 1px 1px 10px rgb(235, 235, 235);
+    padding: 10px;
+}
+
+.total {
+    box-shadow: 1px 1px 10px rgb(235, 235, 235);
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+    gap: 10px;
+}
+
+.endereco-title {
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+}
+
+.endereco-dados {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-left: 5px;
+}
+
+.editar {
+    text-align: right;
+}
+
+.editar-link {
+    margin-right: 1rem;
+}
+
+.itens-produtos {
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+}
+
+.itens-texto {
+    display: flex;
+    justify-content: center;
+    text-align: left;
+    flex-direction: column;
+    margin-left: 5px;
+}
+
+.itens-imagem {
+    width: 150px;
+}
+
+.remover-link {
+    color: #ff0000;
+    font-Weight: 500; 
+    border: 1px #ff0000 solid;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.total-itens {
+    background-color: #E5FFF1;
+    padding: 10px;
+}
+
+.preco-desconto {
+    color: #1F9050;
+    font-weight: 700;
+}
+
+.resumo {
+    color: #ff8e00;
+}
