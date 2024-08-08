@@ -21,6 +21,10 @@
   margin-left: 3%;
 }
 
+.endereco-form {
+  padding: 2rem 0;
+}
+
 .form-dados {
   display: flex;
   align-items: center;

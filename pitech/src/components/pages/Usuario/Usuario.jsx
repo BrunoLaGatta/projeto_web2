@@ -179,7 +179,7 @@ const Usuario = () => {
             </form>
         </div>
 
-        <div class="container-dados">
+        <div class="container-dados endereco-form">
           <div class="meus-dados">
             <FmdGoodIcon color="warning"></FmdGoodIcon>
             <h4 class='texto-dados'>ENDEREÇO</h4>

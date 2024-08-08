@@ -24,7 +24,7 @@ const Carrinho = () => {
         {
             idProduto: 1,
             descricao: 'Produto 1',
-            valor: 100.00,
+            valor: 1000.00,
             imagem1: imagem1
         }
     ]);
@@ -58,10 +58,10 @@ const Carrinho = () => {
                     <RocketIcon></RocketIcon>
                     <h3>Resumo</h3>
                 </div>
-                <p>Valor dos produtos: R$250.00</p>
+                <p>Valor dos produtos: R$1000,00</p>
                 <div class="total-itens">
                     <p>Valor a vista no <strong>PIX</strong></p>
-                    <p class='preco-desconto'>R$ 232,50</p>
+                    <p class='preco-desconto'>R$ 900,00</p>
                 </div>
                 <StyledButton>
                     IR PARA O PAGAMENTO
