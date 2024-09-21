@@ -7,6 +7,11 @@ import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
+import Produto from '../pages/Produto/Produto';
+
+import { Link, Route, Routes } from "react-router-dom";
+
+import { useNavigate } from "react-router-dom";
 
 const StyledCard = styled(Card)(({ theme }) => ({
     color: 'white',
@@ -30,12 +35,20 @@ const StyledCard = styled(Card)(({ theme }) => ({
       },
   }));
 
+  
 const CardItem = (props) => {
     
     const titulo = props.titulo;
-    console.log("titulo", titulo);
+    // console.log("titulo", titulo);
     const image = props.image;
     const preco = props.preco;
+    const idProduto = props.id;
+    console.log("card: " + idProduto)
+    const navigate = useNavigate();
+
+    function mostraProduto() {
+        navigate(`/Produto`, { state: { id: idProduto } });
+      }
 
     return (
         <StyledCard>
@@ -56,7 +69,7 @@ const CardItem = (props) => {
             </CardContent>
             <p className='valor'>R$ {preco}</p>
             <CardActions sx={{height: '20px'}}>
-                <StyledButton variant="outlined">Ver mais</StyledButton>
+                <StyledButton onClick={() => mostraProduto()} variant="outlined">Ver mais</StyledButton>
             </CardActions>
         </StyledCard>
             

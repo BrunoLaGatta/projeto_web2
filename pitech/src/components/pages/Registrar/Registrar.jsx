@@ -16,6 +16,8 @@ const Registrar = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = React.useState(false);
 
+  let url = 'http://localhost:3000/';
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
   const handleMouseDownPassword = (event) => {
@@ -33,12 +35,43 @@ const Registrar = () => {
     setPassword(e.target.value);
   };
 
+  const fetchCriaUsuario = () => {
+    var userObj = {
+      nome: nome,
+      email: email,
+      senha: password,
+    };
+    var jsonBody = JSON.stringify(userObj);
+    
+    // const formData = new FormData();
+    // formData.append("nome", nome);
+    // formData.append("email", email);
+    // formData.append("senha", password);
+
+    // console.log(formData)
+
+    console.log("json " + jsonBody)
+
+    fetch(url + 'CriaUsuario', {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    },
+    body: jsonBody,
+  })
+    .then((resp) => resp.json())
+    .then((data) => {
+        alert("Usuario Criado")
+        console.log("Resposta do servidor:", data);
+    })
+    .catch((err) => console.log(err));
+};
+
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your login logic here
-    console.log("Nome: ", nome);
-    console.log("Email: ", email);
-    console.log("Password ", password);
+    fetchCriaUsuario();
   };
 
   return (

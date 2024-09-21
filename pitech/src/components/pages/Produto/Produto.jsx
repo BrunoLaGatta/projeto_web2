@@ -1,6 +1,6 @@
 import "./Produto.css";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -8,66 +8,43 @@ import "slick-carousel/slick/slick.css";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import LocalAtmIcon from "@mui/icons-material/LocalAtm";
-import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
-import imagem2 from '../../../assets/imagemProduto2.png';
-import imagem3 from '../../../assets/imagemProduto3.png';
+
+import { useLocation } from "react-router-dom";
 
 const Produto = () => {
-  const produtos = [
-    {
-      key: 1,
-      titulo:
-        "Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial",
-      desc: "Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial Cinza Espacial Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial Cinza Espacial Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial",
-      imagem:
-        "https://images.kabum.com.br/produtos/fotos/sync_mirakl/462256/Apple-Macbook-Pro-14-Polegadas-Chip-M2-Pro-2022-10c-CPU-16c-GPU-16GB-512GB-Cinza-Espacial_1684178292_gg.jpg",
-      preco: "15189.89",
-    },
-    {
-      key: 1,
-      titulo:
-        "Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial",
-      desc: "Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial",
-      imagem: imagem2,
-      preco: "15189.89",
-    },
-    {
-      key: 1,
-      titulo:
-        "Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial",
-      desc: "Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial Apple Macbook Pro, 14 Polegadas, Chip M2 Pro, 2022 10c, CPU/16c GPU/16GB/512GB, Cinza Espacial",
-      imagem: imagem3,
-      preco: "15189.89",
-    },
-  ];
 
-  const produtos2 = [
-    {
-      id: 1,
-      nome: "Produto 1",
-      imagem: "https://unsplash.it/600/300/?image=43",
-      preco: "R$ 100,00",
-    },
-    {
-      id: 2,
-      nome: "Produto 2",
-      imagem: "https://unsplash.it/600/300/?image=49",
-      preco: "R$ 200,00",
-    },
-    {
-      id: 3,
-      nome: "Produto 3",
-      imagem: "https://unsplash.it/600/300/?image=60",
-      preco: "R$ 300,00",
-    },
-    {
-      id: 4,
-      nome: "Produto 4",
-      imagem: "https://unsplash.it/600/300/?image=106",
-      preco: "R$ 400,00",
-    },
-  ];
+  const [produtos, setProdutos] = useState([])
+  const [imagens, setImagens] = useState([])
+  let url = 'http://localhost:3000/';
 
+  const location = useLocation();
+  const idProduto = location.state?.id;
+  const fetchProduto = () => {
+      fetch(url + 'produto/' + idProduto, {
+      method: "GET",
+      headers: {
+        "Content-type": "aplication/json",
+      },
+    })
+      .then((resp) => resp.json())
+      .then((data) => {
+        setProdutos(data);
+        // if(data[0].imagem1)
+        // setImagens([data[0].imagem1])
+        // else if(data[0].imagem2)
+          setImagens([data[0].imagem1, data[0].imagem2])
+        // else if(data[0].imagem3)
+        //   setImagens([data[0].imagem1, data[0].imagem2, data[0].imagem3])
+  
+        console.log(data)
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    fetchProduto();
+  }, []);
+  
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDescription = () => {
@@ -87,7 +64,7 @@ const Produto = () => {
       </a>
     ),
     customPaging: function (i) {
-      const targetImage = produtos[i].imagem;
+      const targetImage = imagens[i];
       return <img src={targetImage} alt={`Thumbnail ${i}`} />;
     },
     dotsClass: "slick-dots slick-thumb",
@@ -103,16 +80,16 @@ const Produto = () => {
         <div className="produto">
           <div className="layout">
             <Slider {...settings}>
-              {produtos.map((produto) => (
-                <li>
-                  <img width={500} src={produto.imagem} />
-                </li>
+              {imagens.map((produto) => (
+                  <li>
+                    <img width={500} src={produto} />
+                  </li>
               ))}
             </Slider>
           </div>
 
           <div className="desc">
-            <h2 className="nome">{produtos[0].titulo}</h2>
+            <h2 className="nome">{produtos[0]?.descricao}</h2>
 
             <div className="titulos">
               <div className="valor">
@@ -123,7 +100,7 @@ const Produto = () => {
               </div>
 
               <p className="preco">
-                <b> R$ {produtos[0].preco}</b>
+                <b> R$ {produtos[0]?.valor}</b>
               </p>
             </div>
             <button className="carrinho">Adicionar no carrinho</button>
@@ -135,7 +112,7 @@ const Produto = () => {
             <div className="toggle-button">{isOpen ? "▲" : "▼"}</div>
           </div>
           <div className={`product-description ${isOpen ? "open" : ""}`}>
-            <p>{produtos[0].desc}</p>
+            <p>{produtos[0]?.sobre}</p>
           </div>
         </div>
       </div>

@@ -17,6 +17,9 @@ const Login = () => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
+  
+  let url = 'http://localhost:3000/';
+
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
@@ -29,11 +32,46 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
+  const realizarLogin = (event) => {
+    event.preventDefault();
+
+    var userObj = {
+      email: email,
+      senha: password,
+    };
+    var jsonBody = JSON.stringify(userObj);
+
+
+    fetch(url + 'login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
+      body: jsonBody,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const token = data.token;
+        const usu_id = data.idUsuario;
+        alert(usu_id);
+        if (token) {
+          // logar(token, usu_id);
+          localStorage.setItem("token", token);
+          console.log("Token: ", token);
+          // navigate(`/`);
+        } else {
+          // navigation.navigate('login');
+          // setMenssagem('Email ou senha inválidos!');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add your login logic here
-    console.log("Email: ", email);
-    console.log("Password ", password);
+    realizarLogin(e);
   };
 
   return (
