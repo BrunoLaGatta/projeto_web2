@@ -1,5 +1,5 @@
 import "./Login.css";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import FormControl from "@mui/material/FormControl";
@@ -9,16 +9,18 @@ import InputLabel from "@mui/material/InputLabel";
 import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext"; // Importe o AuthProvider
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = React.useState(false);
+  const { login, user } = useContext(AuthContext); // Acessar o contexto
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  
-  let url = 'http://localhost:3000/';
+  const navigate = useNavigate();
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -32,46 +34,54 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const realizarLogin = (event) => {
-    event.preventDefault();
+  // const realizarLogin = (event) => {
+  //   event.preventDefault();
 
-    var userObj = {
-      email: email,
-      senha: password,
-    };
-    var jsonBody = JSON.stringify(userObj);
+  //   var userObj = {
+  //     email: email,
+  //     senha: password,
+  //   };
+  //   var jsonBody = JSON.stringify(userObj);
 
+  //   fetch(url + "login", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Accept: "application/json",
+  //     },
+  //     body: jsonBody,
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       const token = data.token;
+  //       const usu_id = data.idUsuario;
+  //       if (token) {
+  //         // logar(token, usu_id);
+  //         // localStorage.setItem("token", token);
+  //         console.log(token);
+  //         // navigate(`/`);
+  //       } else {
+  //         alert(data.mensagem);
+  //         return;
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // };
 
-    fetch(url + 'login', {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-      },
-      body: jsonBody,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const token = data.token;
-        const usu_id = data.idUsuario;
-        alert(usu_id);
-        if (token) {
-          // logar(token, usu_id);
-          localStorage.setItem("token", token);
-          console.log("Token: ", token);
-          // navigate(`/`);
-        } else {
-          // navigation.navigate('login');
-          // setMenssagem('Email ou senha inválidos!');
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  const handleSubmit = (e) => {
-    realizarLogin(e);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (email === "" || password === "") {
+      alert("Preencha todos os campos");
+      return;
+    }
+    const sucess = await login(email, password);
+    if (!sucess) {
+      alert("Usuário ou senha inválidos");
+      return;
+    }
+    navigate(`/`);
   };
 
   return (
@@ -86,6 +96,7 @@ const Login = () => {
                 label="Usuario"
                 variant="outlined"
                 margin="dense"
+                type="email"
                 onChange={handleEmailChange}
               />
               <FormControl variant="outlined" onChange={handlePasswordChange}>
@@ -118,7 +129,7 @@ const Login = () => {
               onChange={handlePasswordChange}
             /> */}
               <div class="input-block">
-                <span class="forgot">
+                <span class="forgot" onClick={() => navigate(`/registrar`)}>
                   <a href="#">Não possui conta ? Registre-se !</a>
                 </span>
                 <Button variant="contained" type="submit">

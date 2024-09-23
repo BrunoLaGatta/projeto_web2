@@ -11,6 +11,7 @@ import Login from "./components/pages/Login/Login";
 import Produto from "./components/pages/Produto/Produto";
 import Registrar from "./components/pages/Registrar/Registrar";
 import Usuario from "./components/pages/Usuario/Usuario";
+import { AuthProvider } from "./components/pages/context/AuthContext"; // Importe o AuthProvider
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -18,16 +19,18 @@ function App() {
   return (
     <>
       <Router>
-        <Header />
-        <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/registrar" element={<Registrar />} />
-          <Route path="/produto" element={<Produto />} />
-          <Route path="/usuario" element={<Usuario />} />
-          <Route path="/carrinho" element={<Carrinho/>} />
-        </Routes>
-        <Footer />
+        <AuthProvider>
+          <Header />
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/registrar" element={<Registrar />} />
+            <Route path="/produto" element={<Produto />} />
+            <Route path="/usuario" element={<Usuario />} />
+            <Route path="/carrinho" element={<Carrinho />} />
+          </Routes>
+          <Footer />
+        </AuthProvider>
       </Router>
     </>
   );

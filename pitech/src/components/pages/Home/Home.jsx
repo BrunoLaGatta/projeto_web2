@@ -12,43 +12,40 @@ import Carousel from "../../layouts/carousel";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import React, { useEffect } from "react";
-import axios from 'axios';
+import axios from "axios";
 
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 const Home = () => {
   const [spacing, setSpacing] = React.useState(2);
-  const [produtos, setProdutos] = React.useState([])
+  const [produtos, setProdutos] = React.useState([]);
 
-  let url = 'http://localhost:3000/';
-  
+  let url = "http://localhost:3000/";
 
-const fetchProdutos = () => {
-  fetch(url + 'produtos/', {
-    method: "GET",
-    headers: {
-      "Content-type": "aplication/json",
-    },
-  })
-    .then((resp) => resp.json())
-    .then((data) => {
-      setProdutos(data);
-      console.log(data);
+  const fetchProdutos = () => {
+    fetch(url + "produtos/", {
+      method: "GET",
+      headers: {
+        "Content-type": "aplication/json",
+      },
     })
-    .catch((err) => console.log(err));
-};
+      .then((resp) => resp.json())
+      .then((data) => {
+        setProdutos(data);
+        console.log(data);
+      })
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
-
     fetchProdutos();
-
 
     // axios.get(url + 'produtos', {
     //   method: "GET",
     //   headers: {
     //   "Content-type": "aplication/json",
     // }})
-    
+
     // .then((response) => {
     //   setProdutos(response.data);
     // })
@@ -56,10 +53,9 @@ const fetchProdutos = () => {
     //   // Lida com erros
     //   console.error('Erro ao fazer a requisição:', error);
     // });
-    
-  },[]);
+  }, []);
 
-  console.log(produtos)
+  // console.log(produtos)
   // const produtos = [
   //   {
   //     key: 1,
@@ -131,13 +127,14 @@ const fetchProdutos = () => {
         <CardMenu nome="Notebooks" image={Notebooks} />
         <CardMenu nome="Perifericos" image={Perifericos} />
       </div>
-      
+
       <div className="nossos_produtos">
         <h1 className="titulo_categoria">Nossos Produtos</h1>
         <div className="cards_item">
           {produtos.map((produto) => {
             return (
-              <CardItem sx={{}}
+              <CardItem
+                sx={{}}
                 id={produto.idProduto}
                 titulo={produto.descricao}
                 image={produto.imagem1}

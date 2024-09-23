@@ -1,6 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
-const mysql2 = require("mysql2/promise");
+const mysql2 = require("mysql2");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
@@ -69,58 +69,29 @@ function execSQLQuery(sqlQry, id, res) {
   });
 }
 
-// retorna result para query
-// function resultSQLQuery(sqlQry, id) {
-//   const connection = mysql.createConnection(db);
-
-//   connection.connect();
-
-//   // var [result] = connection.query(sqlQry, id);
-// //   connection.query(sqlQry, id, (error, results, fields) => {
-// //     console.log(error);
-// //     if (error) return json(results);
-// //     else return error;
-// //     connection.end();
-// //     console.log("executou!");
-// //   });
-//   try {
-//     return result;
-//   } catch (err) {
-//     console.log("errorrrrrrrrrrr");
-//     throw err;
-//   }
-// }
-
-// retorna result para query
-function resultSQLQuery(sqlQry, id) {
+function execSQLQueryEnde(sqlQry, id, res) {
   const connection = mysql.createConnection(db);
   connection.connect();
-  var results = connection.query(sqlQry, id);
-  connection.end();
+  connection.query(sqlQry, id, (error, results, fields) => {
+    console.log(error);
+    connection.end();
+    console.log("executou!");
+  });
+}
+
+// retorna result para query
+async function resultSQLQuery(sqlQry, id) {
+  const connection = mysql2.createConnection(db);
+  connection.connect();
+
+  var [result] = await connection.promise().query(sqlQry, id);
   try {
-    return results;
+    return result;
   } catch (err) {
     console.log("errorrrrrrrrrrr");
     throw err;
   }
 }
-
-// function execSQLQuery(sqlQry, id, res) {
-//   try {
-//     const connection = mysql.createConnection(db);
-//     connection
-//       .query(sqlQry, id, (error, results, fields) => {
-//         console.log(error);
-//         if (error) res.json(error);
-//         else res.json(results);
-
-//         console.log("executou!");
-//       })
-//       .end();
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
 
 const middlewareValidarJWT = (req, res, next) => {
   const jwtToken = req.headers["authorization"];
@@ -178,59 +149,144 @@ app.post("/CriaUsuario", (req, res) => {
 });
 
 //edita o usuario
-app.put("/editarUsuarioProprio/:id", (req, res) => {
-  const idUsu = [req.params.id];
+// app.put("/editarUsuarioProprio/:id", (req, res) => {
+//   const idUsu = [req.params.id];
+//   let data = req.body;
+//   if (data.senha) {
+//     bcrypt.hash(data.senha, saltRounds, (err, hash) => {
+//       if (err) {
+//         // Lida com erros
+//       } else {
+//         const id = [data.nome, data.email, hash, idUsu];
+//         execSQLQuery(
+//           "UPDATE usuario set nome = ?, email = ?, senha = ? WHERE idUsuario = ?;",
+//           id,
+//           res
+//         );
+//       }
+//     });
+//   } else {
+//     const id = [data.nome, data.email, idUsu];
+//     execSQLQuery(
+//       "UPDATE usuario set nome = ?, email = ?,  WHERE idUsuario = ?;",
+//       id,
+//       res
+//     );
+//   }
+// });
+
+app.put("/editarUsuarioProprio/:id", async (req, res) => {
+  const idUsu = req.params.id;
   let data = req.body;
-  if (data.senha) {
-    bcrypt.hash(data.senha, saltRounds, (err, hash) => {
-      if (err) {
-        // Lida com erros
-      } else {
-        const id = [data.nome, data.email, hash, idUsu];
-        execSQLQuery(
-          "UPDATE Usuario set nome = ?, email = ?, senha = ? WHERE idUsuario = ?;",
-          id,
-          res
-        );
-      }
-    });
-  } else {
-    const id = [data.nome, data.email, idUsu];
-    execSQLQuery(
-      "UPDATE Usuario set nome = ?, email = ?,  WHERE idUsuario = ?;",
-      id,
-      res
-    );
+
+  try {
+    if (data.senha) {
+      // Hash da senha se foi fornecida
+      bcrypt.hash(data.senha, saltRounds, async (err, hash) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ error: "Erro ao gerar o hash da senha" });
+        } else {
+          // Atualizar os dados do usuário
+          const usuarioData = [data.nome, data.email, hash, idUsu];
+          await resultSQLQuery(
+            "UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE idUsuario = ?;",
+            usuarioData
+          );
+          await atualizarOuInserirEndereco(data, idUsu);
+          return res
+            .status(200)
+            .json({ message: "Usuário e endereço atualizados com sucesso!" });
+        }
+      });
+    } else {
+      // Atualizar sem senha
+      const usuarioData = [data.nome, data.email, idUsu];
+      await resultSQLQuery(
+        "UPDATE usuario SET nome = ?, email = ? WHERE idUsuario = ?;",
+        usuarioData
+      );
+      await atualizarOuInserirEndereco(data, idUsu);
+      return res
+        .status(200)
+        .json({ message: "Usuário e endereço atualizados com sucesso!" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Erro ao atualizar o usuário ou endereço" });
   }
+});
+
+// Função para atualizar ou inserir endereço
+async function atualizarOuInserirEndereco(data, idUsu) {
+  try {
+    // Checar se já existe um endereço para o idUsuario
+    const [resultQuery] = await resultSQLQuery(
+      "SELECT * FROM endereco WHERE idUsuario = ?;",
+      [idUsu]
+    );
+
+    const enderecoData = [
+      data.logradouro,
+      data.numero,
+      data.bairro,
+      data.cidade,
+      data.cep,
+      data.uf,
+      data.complemento,
+      idUsu,
+    ];
+    console.log("aqui");
+    if (resultQuery) {
+      console.log("Endereço já existe");
+      console.log(enderecoData);
+      // Se já existe, atualizar o endereço
+      await execSQLQueryEnde(
+        `UPDATE endereco SET logradouro = ?, numero = ?, bairro = ?, cidade = ?, cep = ?, uf = ?, complemento = ? WHERE idUsuario = ?;`,
+        enderecoData
+      );
+    } else {
+      console.log("Endereço não existe");
+      // Se não existe, inserir um novo endereço
+      await execSQLQueryEnde(
+        `INSERT INTO endereco (logradouro, numero, bairro, cidade, cep, uf, complemento, idUsuario) 
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?);`,
+        enderecoData
+      );
+    }
+  } catch (err) {
+    throw new Error("Erro ao atualizar ou inserir endereço");
+  }
+}
+
+app.get("/dadosUsuario/:id", (req, res) => {
+  execSQLQuery(
+    "SELECT usuario.nome, usuario.email, endereco.cep, endereco.numero, endereco.complemento FROM usuario LEFT JOIN endereco ON usuario.idUsuario = endereco.idUsuario WHERE usuario.idUsuario = ?",
+    req.params.id,
+    res
+  );
+  console.log(req.params.id);
 });
 
 //login
 app.post("/login", async (req, res) => {
   const data = req.body;
-  console.log(data);
   const id = [data.email];
-  const resultado = await execSQLQuery2(
+  var [resultQuery] = await resultSQLQuery(
     "SELECT idUsuario, senha FROM usuario WHERE email = ?",
     id
   );
-  console.log(resultado.resp);
-  var resultQuery = resultSQLQuery(
-    "SELECT idUsuario, senha FROM usuario WHERE email = ?",
-    id
-  );
-//   console.log(resultQuery);
-  if (resultado) {
-    console.log("aaa");
-    bcrypt.compare(data.senha, resultado.senha, (err, result) => {
+  if (resultQuery) {
+    bcrypt.compare(data.senha, resultQuery.senha, (err, result) => {
       if (err) {
-        console.log("ccc");
         // Lida com erros
       } else if (result) {
-        console.log("ddd");
         // Senha válida, o usuário está autenticado com sucesso
         var tokenData = {
           email: data.email,
-          idUsuario: resultado.idUsuario,
+          idUsuario: resultQuery.idUsuario,
         };
         jwt.sign(tokenData, privateKey, (err, token) => {
           if (err) {
@@ -239,21 +295,16 @@ app.post("/login", async (req, res) => {
           }
           res.json({
             token: token,
-            idUsuario: resultado.idUsuario,
+            idUsuario: resultQuery.idUsuario,
           });
-          // res.setHeader("x-access-token", token);
-          // console.log("token", token);
-          // res.setHeader("idUsuario", tokenData.idUsuario);
         });
       } else {
         // Senha incorreta, autenticação falhou
         res.status(401);
-        res.send("mensage:" + "Senha incorreta");
+        res.json({ mensagem: "Error" });
         res.end();
       }
     });
-  } else {
-    console.log("bbb");
   }
 });
 
