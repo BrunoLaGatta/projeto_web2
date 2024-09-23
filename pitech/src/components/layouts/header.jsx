@@ -177,6 +177,7 @@ export default function MenuAppBar() {
                     <MenuItem
                       onClick={() => {
                         handleClose;
+                        navigate(`/`);
                         handleLogout();
                       }}
                     >

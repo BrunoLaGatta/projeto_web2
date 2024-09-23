@@ -73,15 +73,21 @@ const Usuario = () => {
       .then((data) => {
         const { cep, complemento, email, nome, numero } = data[0];
         setDadosUsuario({ nome, email });
+        if (cep) {
+          fetchAddress(cep, numero, complemento);
+        }
         console.log(data);
       })
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    fetchUsuario();
-  }, []);
-
+  useEffect(
+    () => {
+      fetchUsuario();
+    },
+    [],
+    dadosEndereco
+  );
   const handleUserChange = (e) => {
     const { name, value } = e.target;
     setDadosUsuario((prevState) => ({
@@ -146,23 +152,23 @@ const Usuario = () => {
   };
 
   const fetchAddress = useCallback(
-    debounce(async (cepR) => {
+    debounce(async (cepR, numero, complemento) => {
       setLoading(true);
       try {
         const response = await axios.get(
           `https://viacep.com.br/ws/${cepR}/json/`
         );
-        const { cep, bairro, complemento, localidade, logradouro, uf } =
-          response.data;
+        const { cep, bairro, localidade, logradouro, uf } = response.data;
         setDadosEndereco({
           cep,
           bairro,
-          complemento,
+          numero: numero,
+          complemento: complemento,
           cidade: localidade,
           logradouro,
           uf,
         });
-        console.log(response.data);
+        // console.log(response.data);
       } catch (e) {
         console.log(e);
       } finally {
@@ -172,6 +178,7 @@ const Usuario = () => {
     []
   );
 
+  console.log(dadosEndereco);
   return (
     <>
       <div class="meus-dados title">
@@ -296,7 +303,7 @@ const Usuario = () => {
               name="numero"
               label="Numero"
               variant="outlined"
-              value={dadosEndereco ? dadosEndereco.numero : ""}
+              value={dadosEndereco.numero ? dadosEndereco.numero : ""}
               margin="dense"
               onChange={handleAddressChange}
             />
@@ -326,7 +333,7 @@ const Usuario = () => {
               name="complemento"
               label="Complemento"
               variant="outlined"
-              value={dadosEndereco ? dadosEndereco.complemento : ""}
+              value={dadosEndereco.complemento ? dadosEndereco.complemento : ""}
               margin="dense"
               onChange={handleAddressChange}
             />
