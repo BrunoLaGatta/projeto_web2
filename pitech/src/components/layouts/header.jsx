@@ -173,7 +173,13 @@ export default function MenuAppBar() {
                     >
                       Perfil
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>Carrinho</MenuItem>
+                    <MenuItem onClick={() => {
+                      handleClose; 
+                      navigate(`/carrinho`); 
+                      }}
+                    >
+                      Carrinho
+                    </MenuItem>
                     <MenuItem
                       onClick={() => {
                         handleClose;

@@ -43,13 +43,6 @@ const Registrar = () => {
     };
     var jsonBody = JSON.stringify(userObj);
     
-    // const formData = new FormData();
-    // formData.append("nome", nome);
-    // formData.append("email", email);
-    // formData.append("senha", password);
-
-    // console.log(formData)
-
     console.log("json " + jsonBody)
 
     fetch(url + 'CriaUsuario', {

@@ -34,42 +34,6 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  // const realizarLogin = (event) => {
-  //   event.preventDefault();
-
-  //   var userObj = {
-  //     email: email,
-  //     senha: password,
-  //   };
-  //   var jsonBody = JSON.stringify(userObj);
-
-  //   fetch(url + "login", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Accept: "application/json",
-  //     },
-  //     body: jsonBody,
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       const token = data.token;
-  //       const usu_id = data.idUsuario;
-  //       if (token) {
-  //         // logar(token, usu_id);
-  //         // localStorage.setItem("token", token);
-  //         console.log(token);
-  //         // navigate(`/`);
-  //       } else {
-  //         alert(data.mensagem);
-  //         return;
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (email === "" || password === "") {
@@ -81,6 +45,7 @@ const Login = () => {
       alert("Usuário ou senha inválidos");
       return;
     }
+    sessionStorage.setItem('userId', sucess);
     navigate(`/`);
   };
 

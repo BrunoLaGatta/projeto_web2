@@ -52,15 +52,6 @@ const Usuario = () => {
   const [loading, setLoading] = useState(false);
   const { user, logout } = useContext(AuthContext);
   let url = "http://localhost:3000/";
-  // const [dadosUsuario, setDadosUsuario] = useState({
-  //   nome: "",
-  //   email: "",
-  //   senha: "",
-  //   confirmarSenha: "",
-  //   cep: "",
-  //   complmento: "",
-  //   numero: "",
-  // });
 
   const fetchUsuario = async () => {
     await fetch(url + "dadosUsuario/" + user.usu_id, {
@@ -168,7 +159,6 @@ const Usuario = () => {
           logradouro,
           uf,
         });
-        // console.log(response.data);
       } catch (e) {
         console.log(e);
       } finally {

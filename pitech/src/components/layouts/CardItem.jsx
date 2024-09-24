@@ -7,7 +7,6 @@ import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import CardMedia from '@mui/material/CardMedia';
 import { CardActionArea } from '@mui/material';
-import Produto from '../pages/Produto/Produto';
 
 import { Link, Route, Routes } from "react-router-dom";
 

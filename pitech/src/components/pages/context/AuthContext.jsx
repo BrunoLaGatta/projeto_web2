@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
         const token = data.token;
         const usu_id = data.idUsuario;
         setUser({ usu_id: usu_id, token: token });
-        return true; // Login bem-sucedido
+        return usu_id; // Login bem-sucedido
       }
     } catch (error) {
       console.log("Erro ao fazer login:", error);

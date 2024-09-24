@@ -20,16 +20,6 @@ app.use(
 app.options("*", cors()); // Configurar as opções HTTP para permitir requisições de pré-voo
 app.get("/", (req, res) => res.json({ message: "Funcionando!" }));
 
-// Configuração do Multer para o armazenamento da imagem
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "../client/public/uploads/");
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + path.extname(file.originalname));
-//   },
-// });
-
 const db = {
   host: "localhost",
   user: "root",
@@ -106,14 +96,6 @@ const middlewareValidarJWT = (req, res, next) => {
   });
 };
 
-// connection.connect((err) => {
-//   if (err) {
-//     console.error("Erro ao conectar ao banco de dados Mysql:", err);
-//     return;
-//   }
-//   console.log("Conexão estabelecida com o banco de dados Mysql");
-// });
-
 // todos os produtos
 app.get("/produtos", (req, res) => {
   execSQLQuery("SELECT * FROM produto", null, res);
@@ -147,33 +129,6 @@ app.post("/CriaUsuario", (req, res) => {
     });
   }
 });
-
-//edita o usuario
-// app.put("/editarUsuarioProprio/:id", (req, res) => {
-//   const idUsu = [req.params.id];
-//   let data = req.body;
-//   if (data.senha) {
-//     bcrypt.hash(data.senha, saltRounds, (err, hash) => {
-//       if (err) {
-//         // Lida com erros
-//       } else {
-//         const id = [data.nome, data.email, hash, idUsu];
-//         execSQLQuery(
-//           "UPDATE usuario set nome = ?, email = ?, senha = ? WHERE idUsuario = ?;",
-//           id,
-//           res
-//         );
-//       }
-//     });
-//   } else {
-//     const id = [data.nome, data.email, idUsu];
-//     execSQLQuery(
-//       "UPDATE usuario set nome = ?, email = ?,  WHERE idUsuario = ?;",
-//       id,
-//       res
-//     );
-//   }
-// });
 
 app.put("/editarUsuarioProprio/:id", async (req, res) => {
   const idUsu = req.params.id;
@@ -270,6 +225,15 @@ app.get("/dadosUsuario/:id", (req, res) => {
   console.log(req.params.id);
 });
 
+app.get("/dadosEndereco/:id", (req, res) => {
+  execSQLQuery(
+    "SELECT endereco.logradouro, endereco.numero, endereco.bairro, endereco.cidade, endereco.cep, endereco.uf, endereco.complemento FROM endereco WHERE endereco.idUsuario = ?",
+    req.params.id,
+    res
+  );
+  console.log(req.params.id);
+});
+
 //login
 app.post("/login", async (req, res) => {
   const data = req.body;
@@ -306,6 +270,32 @@ app.post("/login", async (req, res) => {
       }
     });
   }
+});
+
+app.post("/adicionaProduto", (req, res) => {
+  const data = req.body;
+  const id = [data.user, data.produto, 0];
+  execSQLQuery(
+    "INSERT INTO carrinho (Usuario_idUsuario, produto_idproduto, comprado) VALUES (?, ?, ?);",
+    id,
+    res
+  );
+});
+
+app.get("/carrinho/:id", (req, res) => {
+  execSQLQuery(
+    "SELECT produto.descricao, produto.valor, produto.imagem1, carrinho.idCarrinho FROM produto INNER JOIN carrinho ON produto.idProduto = carrinho.produto_idproduto WHERE carrinho.Usuario_idUsuario = ?",
+    req.params.id,
+    res
+  );
+});
+
+app.delete("/removerProduto/:id", (req, res) => {
+  execSQLQuery(
+    "DELETE FROM carrinho WHERE carrinho.idCarrinho = ?;",
+    req.params.id,
+    res
+  );
 });
 
 app.listen(3000, () => {

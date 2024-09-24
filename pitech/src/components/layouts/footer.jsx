@@ -77,7 +77,7 @@ const Footer = () => {
     }));
   
     return (
-        <Toolbar style={{position: 'fixed', bottom: 0, color: "white", width: '100%'}}
+        <Toolbar style={{position: 'fixed', bottom: 0, color: "white", width: '100%', zIndex: 0}}
         sx={{backgroundColor: "#ff8e00"}}>
           <Typography
             variant="h6"
